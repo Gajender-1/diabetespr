@@ -1,7 +1,6 @@
 #Importing the libraries
 import pickle
-from flask import Flask,request,jsonify,render_template
-import requests
+from flask import Flask,request,render_template
 import numpy as np
 
 #Global variables
@@ -19,11 +18,7 @@ def predict():
     bmi = int(request.form['bmi'])
     age = int(request.form['age'])
     glucose = int(request.form['glucose'])
-
-    print('Age:',age)
-    print('BMI:',bmi)
-    print('Glucose:',glucose)
-
+    
     #Making predictions
     prediction = loadedModel.predict([[glucose,bmi,age]])[0]
     confidence = loadedModel.predict_proba([[glucose, bmi, age]])
@@ -35,9 +30,6 @@ def predict():
         sendPrediction = 'Not Diabetic'
         
     sendConfidence = str(round(np.amax(confidence[0]*100),2))
-
-    print(sendPrediction)
-    print(sendConfidence)
 
     return render_template('diabetes.html', diagnosis_output = sendPrediction, confidence_output = sendConfidence)
 
